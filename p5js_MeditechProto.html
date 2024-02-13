@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html> 
+  <head>
+    <title>Processing.JS inside Webpages: Template</title> 
+  </head>
+  <body>
+	<!--This draws the canvas on the webpage -->
+    <canvas id="mycanvas"></canvas> 
+  </body>
+ 
+  <!-- Include the processing.js library -->
+  <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
+  <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+  <script>
+  var programCode = function(processingInstance) {
+    with (processingInstance) {
+
+	
+	var width = 1500;
+	var height = 700;
+	
+      size(width, height); 
+      frameRate(30);
+        
+      // Paste code from Khan Academy here:
+
+	var newPage = function(cursorX, cursorY, cursorState, buttons){
+
+
+
+
+	}
+
+	class Button{
+		constructor(name, page, x, y, width, height) {
+    	this.name = name;
+		this.page = page;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+  		}	
+	};
+
+
+
+	  
+	var i = 0;
+	var x = 200;
+	var y = 200;
+	var xVel = 9;
+	var yVel = -7;
+	var NButtons = 3;
+	var spread = 50;
+	var buttons = [];
+
+
+
+	for(i = 0; i < NButtons; i++){
+		newButton = new Button('button', 0, (width/NButtons)*i + spread/2, (height/3), (width/NButtons - spread), height/3);
+		buttons.push(newButton)
+
+
+	};
+	  
+	draw = function(){
+	
+		x = x + xVel;
+		y = y + yVel
+	
+		if (x > width || x < 0){
+			xVel = - xVel;
+		};
+		if (y > height || y < 0){
+			yVel = - yVel;
+		};
+	
+	
+		fill(255, 255, 0);
+		ellipse(x, y, 200, 200);
+		noFill();
+		stroke(0, 0, 0);
+		strokeWeight(2);
+		arc(x, y, 150, 100, 0, PI);
+		fill(0, 0, 0);
+		ellipse(x + 50, y, 10, 10);
+		ellipse(x - 47, y, 10, 10);	  
+
+		for (i = 0; i < NButtons; i++){
+			rect(buttons[i].x, buttons[i].y, buttons[i].width, buttons[i].height);
+		}
+	}
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+    }};
+
+
+  // Get the canvas that ProcessingJS will use
+  var canvas = document.getElementById("mycanvas"); 
+  // Pass the function to ProcessingJS constructor
+  var processingInstance = new Processing(canvas, programCode); 
+  </script>
+</html>
