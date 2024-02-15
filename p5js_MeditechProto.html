@@ -50,11 +50,16 @@
 	var y = 200;
 	var xVel = 9;
 	var yVel = -7;
-	var NButtons = 3;
+	var NButtons = 5;
 	var spread = 50;
 	var buttons = [];
 
-
+	// color pallette
+	let veryLightBlue = [224, 230, 254];
+	let lightBlue = [180, 191, 255];
+	let darkBlue = [103, 119, 204];
+	let lightGreen = [180, 254, 166];
+	let red = [171, 88, 98];
 
 	for(i = 0; i < NButtons; i++){
 		newButton = new Button('button', 0, (width/NButtons)*i + spread/2, (height/3), (width/NButtons - spread), height/3);
@@ -63,6 +68,7 @@
 
 	};
 	  
+
 	draw = function(){
 	
 		x = x + xVel;
@@ -76,26 +82,27 @@
 		};
 	
 	
-		fill(255, 255, 0);
+		fill(darkBlue[0], darkBlue[1], darkBlue[2]);
 		ellipse(x, y, 200, 200);
 		noFill();
 		stroke(0, 0, 0);
 		strokeWeight(2);
 		arc(x, y, 150, 100, 0, PI);
-		fill(0, 0, 0);
+		fill(red[0], red[1], red[2]);
 		ellipse(x + 50, y, 10, 10);
 		ellipse(x - 47, y, 10, 10);	  
 
 		for (i = 0; i < NButtons; i++){
 			rect(buttons[i].x, buttons[i].y, buttons[i].width, buttons[i].height);
 		}
+
 	}
 	  
 	  
 	  
 	  
 	  
-	  
+
 	  
 	  
 	  
