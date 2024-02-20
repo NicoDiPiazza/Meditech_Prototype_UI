@@ -3,6 +3,14 @@ team 5 project for ENGR 102, an innovation on the existing UI for the product/co
 Primary Programmer: Domenico Di Piazza <br>
 Other Team 5 members: Benjamin Sparrow, Jocilyn Lambert, Kunwarpratap Kang <br>
 
+Update 2:<br>
+The First major button update<br>
+added: main button functionality, linking to pages, page attributes, button-making function<br>
+removed: bouncing smiley face<br>
+Prototype 0.2<br>
+2/19/2024<br>
+<br>
+
 Update 1:<br>
   implemented the official colors of meditech<br>
   added: red, very light blue, light blue, dark blue, and light green. changed placeholder NButtons from = 3 to = 5<br>
