@@ -3,6 +3,15 @@ team 5 project for ENGR 102, an innovation on the existing UI for the product/co
 Primary Programmer: Domenico Di Piazza <br>
 Other Team 5 members: Benjamin Sparrow, Jocilyn Lambert, Kunwarpratap Kang <br>
 
+Update 3:<br>
+The First major feedback update<br>
+added: green checkmark when a click is registered, ding sound when click is registered<br>
+removed: nothing<br>
+Prototype 0.3<br>
+2/19/2024<br>
+<br>
+
+
 Update 2:<br>
 The First major button update<br>
 added: main button functionality, linking to pages, page attributes, button-making function<br>
