@@ -6,12 +6,17 @@
   <body>
 	<!--This draws the canvas on the webpage -->
     <canvas id="mycanvas"></canvas> 
+	<audio id="audio" src="ring-G.mp3"></audio>
   </body>
  
   <!-- Include the processing.js library -->
   <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
   <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
   <script>
+
+
+
+
   var programCode = function(processingInstance) {
     with (processingInstance) {
 
@@ -23,8 +28,6 @@
       frameRate(30);
         
       // Paste code from Khan Academy here:
-
-
 
 
 	var buttonDimensions = function(givenPage){
@@ -64,14 +67,20 @@
 			if(hitboxes[i].x <= mouseX && mouseX <= hitboxes[i].x + hitboxes[i].width){
 				if(hitboxes[i].y <= mouseY && mouseY <= hitboxes[i].y + hitboxes[i].height){
 
-					hitboxes[i].color = myLightGreen;
 					currentPage = pages[hitboxes[i].page];
+					// put all the feedback stuff here
+					myAudio.play()
 					break; // this has to go in otherwise the for loop gets REAL confused about what the current page is
 				};
 			};
 		};
+
+		background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
+		wait = 0;
+		
 		hitboxes = buttonDimensions(currentPage);
 		pageDisplay(currentPage, hitboxes);
+
 	}
 
 
@@ -103,6 +112,10 @@
 	var xVel = 9;
 	var yVel = -7;
 	var spread = 50;
+	let myAudio = document.querySelector('#audio')
+	let checkSize = 50;
+	let wait =0;
+	let hangTime = 20;
 	
 
 	// hardcode pages here until pages are procedurally generated
@@ -123,18 +136,31 @@
 	var myLightGreen = [180, 254, 166];
 	var myRed = [171, 88, 98];
 
-	  
 
-	draw = function(){  
+
+	draw = function(){
+		
+		if(wait<=hangTime){	
+			noStroke();
+			fill(myLightGreen[0], myLightGreen[1], myLightGreen[2]);
+	
+			triangle(width-2.5*checkSize, 1.6*checkSize, width-2*checkSize, 2*checkSize, width-2*checkSize, 3*checkSize);
+			triangle(width-1*checkSize, 0.5*checkSize, width-2*checkSize, 2*checkSize, width-2*checkSize, 3*checkSize);
+	
+			stroke(10);
+			if(wait === hangTime){
+				background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
+				hitboxes = buttonDimensions(currentPage);
+				pageDisplay(currentPage, hitboxes);
+			};
+		}
+		wait++;
+		
+		
+	
 		console.log(currentPage.name);
 
-
 	}
-	  
-	  
-	  
-	  
-	  
 
 	  
 	  
@@ -146,5 +172,6 @@
   var canvas = document.getElementById("mycanvas"); 
   // Pass the function to ProcessingJS constructor
   var processingInstance = new Processing(canvas, programCode); 
+
   </script>
 </html>
