@@ -35,7 +35,7 @@
 		// butts used to be a shortening of buttons so that I wasn't initializing a variable twice... but now it's just for fun.
 		let butts = [];
 		for(i = 0; i < NButtons; i++){
-		newButton = new Button(i, (width/NButtons)*i + spread/2, (height/3), (width/NButtons - spread), height/3, myRed);
+		newButton = new Button(i, (givenPage.width/NButtons)*i + spread/2, (givenPage.height/3), (givenPage.width/NButtons - spread), givenPage.height/3, myDarkBlue);
 		butts.push(newButton)
 
 
@@ -70,13 +70,13 @@
 					currentPage = pages[hitboxes[i].page];
 					// put all the feedback stuff here
 					myAudio.play()
+					wait = 0;
 					break; // this has to go in otherwise the for loop gets REAL confused about what the current page is
 				};
 			};
 		};
 
 		background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
-		wait = 0;
 		
 		hitboxes = buttonDimensions(currentPage);
 		pageDisplay(currentPage, hitboxes);
@@ -97,9 +97,14 @@
 
 
 	class Page{
-		constructor(name, NButtons){
+		constructor(name, Buttons){
 			this.name = name;
-			this.NButtons = NButtons;
+			this.NButtons = Buttons[0];
+			this.x = Buttons[1];
+			this.y = Buttons[2];
+			this.width = Buttons[3];
+			this.height = Buttons[4];
+			this.orientation = Buttons[5];
 
 		}
 
@@ -115,15 +120,18 @@
 	let myAudio = document.querySelector('#audio')
 	let checkSize = 50;
 	let wait =0;
-	let hangTime = 20;
+	let hangTime = 10;
+	let cursorRadius = 50
 	
 
 	// hardcode pages here until pages are procedurally generated
-	let home = new Page("home", 5);
-	let pageA = new Page ('A', 1);
-	let pageB = new Page ('B', 2);
-	let pageC = new Page ('C', 3);
-	let pageD = new Page ('D', 4);
+	//button set syntax: [NButtons, x, y, width, height, orientation]
+	let home = new Page("home", [5, 0, 0, 1000, 200, 0]);
+	let pageA = new Page ('A', [1, 0, 0, 200, 200, 0]);
+	let pageB = new Page ('B', [2, 0, 0, 200, 200, 0]);
+	let pageC = new Page ('C', [3, 0, 0, 200, 200, 0]);
+	let pageD = new Page ('D', [4, 0, 0, 200, 200, 0]);
+	//let pageExample = new Page ('Example', [5, ])
 	let pages = [home, pageA, pageB, pageC, pageD];
 
 
@@ -139,28 +147,31 @@
 
 
 	draw = function(){
+
+		background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
+		hitboxes = buttonDimensions(currentPage);
+		pageDisplay(currentPage, hitboxes);
+		fill()
+
+		fill(255, 255, 255);
 		
 		if(wait<=hangTime){	
-			noStroke();
 			fill(myLightGreen[0], myLightGreen[1], myLightGreen[2]);
-	
-			triangle(width-2.5*checkSize, 1.6*checkSize, width-2*checkSize, 2*checkSize, width-2*checkSize, 3*checkSize);
-			triangle(width-1*checkSize, 0.5*checkSize, width-2*checkSize, 2*checkSize, width-2*checkSize, 3*checkSize);
-	
-			stroke(10);
-			if(wait === hangTime){
-				background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
-				hitboxes = buttonDimensions(currentPage);
-				pageDisplay(currentPage, hitboxes);
-			};
+			
+			wait++;
 		}
-		wait++;
-		
+		ellipse(mouseX, mouseY, 50, 50);
 		
 	
 		console.log(currentPage.name);
 
+
 	}
+	  
+	  
+	  
+	  
+	  
 
 	  
 	  
