@@ -23,6 +23,7 @@
 	
 	var screenWidth = 1400;
 	var screenHeight = 600;
+	noCursor();
 	
       size(screenWidth, screenHeight); 
       frameRate(30);
@@ -73,6 +74,8 @@
 			let color = buttDims[i].color;
 			fill(color[0], color[1], color[2]);
 			rect(buttDims[i].x, buttDims[i].y, buttDims[i].width, buttDims[i].height);
+			fill(255);
+			text(pages[buttDims[i].page].name, buttDims[i].x + buttDims[i].width/2.5, buttDims[i].y + buttDims[i].height/2.1);
 		};
 
 	}
@@ -135,7 +138,7 @@
 
 	  
 
-	var spread = 50;
+	var spread = 10;
 	let myAudio = document.querySelector('#audio')
 	let wait =0;
 	let hangTime = 10;
@@ -144,13 +147,22 @@
 
 	// hardcode pages here until pages are procedurally generated
 	//button set syntax: [[NButtons, x, y, width, height, orientation], [ditto], ...]
-	let home = new Page("home", [[2, 0, 0, 1000, 200, true], [3, 200, 100, 400, 400, false]], [0, 1, 2, 3, 4]);
-	let pageA = new Page ('A', [[1, 0, 0, 800, 200, true]], [0, 1, 2, 3, 4]);
-	let pageB = new Page ('B', [[2, 300, 0, 800, 200, true]], [0, 1, 2, 3, 4]);
-	let pageC = new Page ('C', [[3, 1000, 50, 400, 200, true]], [0, 1, 2, 3, 4]);
-	let pageD = new Page ('D', [[4, 0, 0, 1200, 200, true]], [0, 1, 2, 3, 4]);
+	let home = new Page('Home', [[2, 0, 0, 1000, 200, true], [3, 200, 100, 400, 400, false]], [0, 1, 2, 3, 5]);
+
+	let summaryPage = new Page ('Summary', [[1, 0, 0, 800, 200, true]], [0]);
+	let diagnosisPage = new Page ('Diagnosis', [[1, 0, 0, 800, 200, true]], [0]);
+	let providerPage = new Page ('Provider', [[1, 0, 0, 800, 200, true]], [0]);
+	let medicationsPage = new Page ('Medications', [[1, 0, 0, 800, 200, true]], [0]);
+	let patientPage = new Page('Patient', [[4, screenWidth/3, screenHeight/4, screenWidth/3, screenHeight*2/3, false], 
+											[2, screenWidth*4/5, screenHeight/8, 200, 100, true], 
+											[1, screenWidth*4/5, screenHeight*4/5, 100, 100, true]],
+											[1, 2, 3, 4, 6, 0, 7]);
+	let loginPage = new Page ('Login', [[1, 0, 0, 800, 200, true]], [0]);
+	let sharePage = new Page ('Share', [[1, 0, 0, 800, 200, true]], [0]);
+
+
 	//let pageExample = new Page ('Example', [5, ])
-	let pages = [home, pageA, pageB, pageC, pageD];
+	let pages = [home, summaryPage, diagnosisPage, providerPage, medicationsPage, patientPage, loginPage, sharePage];
 
 	
 
