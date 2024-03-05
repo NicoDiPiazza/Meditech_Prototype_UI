@@ -3,6 +3,15 @@ team 5 project for ENGR 102, an innovation on the existing UI for the product/co
 Primary Programmer: Domenico Di Piazza <br>
 Other Team 5 members: Benjamin Sparrow, Jocilyn Lambert, Kunwarpratap Kang <br>
 
+Update 6:<br>
+The First Page Example<br>
+added: an example page (Patient) and connected pages. Gave pages names that show up on the button to them<br>
+removed: zisible cursor, leaving only color-changing circle<br>
+Prototype 0.6<br>
+3/4/2024<br>
+<br>
+
+
 Update 5:<br>
 Button Layout<br>
 added: button orientation, refactored buttons almost completely, now they can be customized to any position for each page, in as many sets as desired. Addresses coming soon<br>
