@@ -3,6 +3,13 @@ team 5 project for ENGR 102, an innovation on the existing UI for the product/co
 Primary Programmer: Domenico Di Piazza <br>
 Other Team 5 members: Benjamin Sparrow, Jocilyn Lambert, Kunwarpratap Kang <br>
 
+Update 5:<br>
+Button Layout<br>
+added: button orientation, refactored buttons almost completely, now they can be customized to any position for each page, in as many sets as desired. Addresses coming soon<br>
+removed: next to nothing<br>
+Prototype 0.5<br>
+3/4/2024<br>
+<br>
 
 Update 4:<br>
 Compartmentalizing Buttons<br>
