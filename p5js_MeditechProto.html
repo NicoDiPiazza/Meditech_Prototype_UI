@@ -101,6 +101,31 @@
 					// put all the feedback stuff here
 					myAudio.play()
 					wait = 0;
+					if(currentPage == backPage){
+						if(path.length >= 1){
+							path.pop();
+							currentPage = path[path.length-1];
+						}
+						else{
+							console.log('Cannot go any farther back')
+							currentPage = path[0];
+						}
+					}
+					else if(currentPage == logoutPage){
+						if(path.length >= 1){
+							userID = null;
+							currentPage = home;
+						}
+						else{
+							console.log('Cannot go any farther back')
+							currentPage = path[0];
+						}
+					}
+					else{
+						path.push(currentPage);
+					};
+
+					
 					break; // this has to go in otherwise the for loop gets REAL confused about what the current page is
 				};
 			};
@@ -108,7 +133,14 @@
 
 		background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
 		
+		
 		pageDisplay(currentPage);
+
+		pathName = '';
+		for (i = 0; i < path.length; i++){
+			pathName = pathName + '/' + path[i].name;
+		}
+		console.log(pathName);
 
 	}
 
@@ -126,10 +158,11 @@
 
 
 	class Page{
-		constructor(name, Buttons, Addresses){
+		constructor(name, Buttons, Addresses, index){
 			this.name = name;
 			this.Buttons = Buttons;
 			this.Addresses = Addresses;
+			this.index = index;
 
 
 		}
@@ -143,31 +176,41 @@
 	let wait =0;
 	let hangTime = 10;
 	let cursorRadius = 50
+	let path = [];
+	let pathName = '';
+	let userID;
 	
 
 	// hardcode pages here until pages are procedurally generated
 	//button set syntax: [[NButtons, x, y, width, height, orientation], [ditto], ...]
-	let home = new Page('Home', [[2, 0, 0, 1000, 200, true], [3, 200, 100, 400, 400, false]], [0, 1, 2, 3, 5]);
+	let home = new Page('Home', [[5, screenWidth/3, screenHeight/6, 400, 600, false]], [6, 7, 4, 5, 8], 1);
 
-	let summaryPage = new Page ('Summary', [[1, 0, 0, 800, 200, true]], [0]);
-	let diagnosisPage = new Page ('Diagnosis', [[1, 0, 0, 800, 200, true]], [0]);
-	let providerPage = new Page ('Provider', [[1, 0, 0, 800, 200, true]], [0]);
-	let medicationsPage = new Page ('Medications', [[1, 0, 0, 800, 200, true]], [0]);
-	let patientPage = new Page('Patient', [[4, screenWidth/3, screenHeight/4, screenWidth/3, screenHeight*2/3, false], 
+	let summaryPage = new Page ('Summary', [[1, 0, 0, 800, 200, true]], [0], 2);
+	let diagnosisPage = new Page ('Diagnosis', [[1, 0, 0, 800, 200, true]], [0], 3);
+	let providersPage = new Page ('Providers', [[1, 0, 0, 800, 200, true]], [0], 4);
+	let medicationsPage = new Page ('Medications', [[1, 0, 0, 800, 200, true]], [0], 5);
+	let patientsPage = new Page('Patients', [[5, screenWidth/3, screenHeight/4, screenWidth/3, screenHeight*2/3, false], 
 											[2, screenWidth*4/5, screenHeight/8, 200, 100, true], 
 											[1, screenWidth*4/5, screenHeight*4/5, 100, 100, true]],
-											[1, 2, 3, 4, 6, 0, 7]);
-	let loginPage = new Page ('Login', [[1, 0, 0, 800, 200, true]], [0]);
-	let sharePage = new Page ('Share', [[1, 0, 0, 800, 200, true]], [0]);
+											[2, 3, 4, 6, 7, 8, 0, 9], 6);
+	let doctorsPage = new Page ('Doctors', [[4, screenWidth/3, screenHeight/4, screenWidth/3, screenHeight*2/3, false], 
+											[2, screenWidth*4/5, screenHeight/8, 200, 100, true], 
+											[1, screenWidth*4/5, screenHeight*4/5, 100, 100, true]],
+											[6, 3, 4, 5, 7, 8, 0, 0], 7);
+	let profilePage = new Page ('User Profile', [[2, 0, 0, 800, 200, true]], [0, 10], 8);
+	let sharePage = new Page ('Share', [[1, 0, 0, 800, 200, true]], [0], 9);
+	let backPage = new Page ('Back', [[1, 0, 0, 800, 200, true]], [0], 0);
+	let logoutPage = new Page ('Logout', [[1, 0, 0, 800, 200, true]], [0], 10);
 
 
-	//let pageExample = new Page ('Example', [5, ])
-	let pages = [home, summaryPage, diagnosisPage, providerPage, medicationsPage, patientPage, loginPage, sharePage];
+	let pages = [backPage, home, summaryPage, diagnosisPage, providersPage, medicationsPage, patientsPage, doctorsPage, profilePage,
+				 sharePage, logoutPage];
 
 	
 
 
-	let currentPage = pages[0];
+	let currentPage = home;
+	path.push(home);
 
 	// color pallette
 	var myVeryLightBlue = [224, 230, 254];
@@ -182,6 +225,20 @@
 
 		background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
 
+		if(currentPage == profilePage){
+			if(userID == null){
+				userID = prompt('Please enter your username:');
+			}
+			else{
+				textSize(40);
+				fill(255);
+
+				text('Welcome ' + userID + '.', screenWidth/4, screenHeight/2);
+
+				textSize(12);
+			};	
+		};
+
 		pageDisplay(currentPage);
 		fill()
 
@@ -194,8 +251,6 @@
 		}
 		ellipse(mouseX, mouseY, 50, 50);
 		
-	
-		console.log(currentPage.name);
 
 
 	}
