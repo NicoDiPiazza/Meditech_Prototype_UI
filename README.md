@@ -1,7 +1,15 @@
 # Meditech_Prototype_UI
-team 5 project for ENGR 102, an innovation on the existing UI for the product/company Meditech <br>
+team 5 project for ENGR 102+, an innovation on the existing UI for the product/company Meditech <br>
 Primary Programmer: Domenico Di Piazza <br>
 Other Team 5 members: Benjamin Sparrow, Jocilyn Lambert, Kunwarpratap Kang <br>
+
+Update 7:<br>
+Page Connections and Paths<br>
+added: username/login page, back button, path, doctor page, cleaned up home page,<br>
+removed: not a whole lot<br>
+Prototype 0.7<br>
+3/6/2024<br>
+<br>
 
 Update 6:<br>
 The First Page Example<br>
@@ -10,7 +18,6 @@ removed: zisible cursor, leaving only color-changing circle<br>
 Prototype 0.6<br>
 3/4/2024<br>
 <br>
-
 
 Update 5:<br>
 Button Layout<br>
