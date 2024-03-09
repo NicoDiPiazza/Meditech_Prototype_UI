@@ -67,9 +67,7 @@
 	};
 
 	var pageDisplay = function(givenPage){
-
 		buttDims = buttonDimensions(currentPage);
-
 		for (i = 0; i < buttDims.length; i++){
 			let color = buttDims[i].color;
 			fill(color[0], color[1], color[2]);
@@ -77,7 +75,23 @@
 			fill(255);
 			text(pages[buttDims[i].page].name, buttDims[i].x + buttDims[i].width/2.5, buttDims[i].y + buttDims[i].height/2.1);
 		};
+	}
 
+	var fileDates = function(){
+		entryDates = [];
+		entryMonth = 0;
+		entryYear = 2010 + floor(random(0, 14));
+		while (entryYear < 2024){
+			entryDay = floor(random(0, 28));
+			entryMonth = entryMonth + floor(random(1, 7));
+			if (entryMonth > 12){
+				entryMonth = entryMonth - 12;
+				entryYear = entryYear + 1;
+			};
+			entryDates.push(str(entryDay) + '/' + str(entryMonth) + '/' + str(entryYear));
+		}
+
+		return(entryDates);
 	}
 
 	var mousePressed = function(){
@@ -90,60 +104,57 @@
 		let NChecks = 0;
 		for(i = 0; i< currentPage.Buttons.length; i++){
 			NChecks = NChecks + currentPage.Buttons[i][0];
-
 		};
 
 		for (i = 0; i < hitboxes.length; i++){
-			if(hitboxes[i].x <= mouseX && mouseX <= hitboxes[i].x + hitboxes[i].width){
-				if(hitboxes[i].y <= mouseY && mouseY <= hitboxes[i].y + hitboxes[i].height){
-
-					currentPage = pages[hitboxes[i].page];
-					// put all the feedback stuff here
-					myAudio.play()
-					wait = 0;
-					if(currentPage == backPage){
-						if(path.length >= 1){
-							path.pop();
-							currentPage = path[path.length-1];
-						}
-						else{
-							console.log('Cannot go any farther back')
-							currentPage = path[0];
-						}
-					}
-					else if(currentPage == logoutPage){
-						if(path.length >= 1){
-							userID = null;
-							currentPage = home;
-						}
-						else{
-							console.log('Cannot go any farther back')
-							currentPage = path[0];
-						}
-					}
-					else{
-						path.push(currentPage);
-					};
-
-					
-					break; // this has to go in otherwise the for loop gets REAL confused about what the current page is
-				};
-			};
+			inXhitbox = hitboxes[i].x <= mouseX && mouseX <= hitboxes[i].x + hitboxes[i].width;
+			inYhitbox = hitboxes[i].y <= mouseY && mouseY <= hitboxes[i].y + hitboxes[i].height;	
+			if(inXhitbox && inYhitbox){
+				currentPage = pages[hitboxes[i].page];
+				// put all the feedback stuff here
+				myAudio.play()
+				wait = 0;
+			}
+		}
+		if(currentPage == backPage){
+			// back button logic
+			if(path.length >= 1){
+				path.pop();
+				currentPage = path[path.length-1];
+			}
+			else{
+				console.log('Cannot go any farther back')
+				currentPage = path[0];
+			}
+		
+		}
+		else if(currentPage == logoutPage){
+			// logout logic
+			userID = null;
+			currentPage = home;
+			path.push(home);
+		}
+		else{
+			// path logic
+			path.push(currentPage);
 		};
 
-		background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
+		if(currentPage == filesPage){
+			logEntries = fileDates();
+			
+		}
+			
+			
 		
-		
-		pageDisplay(currentPage);
 
+		background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
+		pageDisplay(currentPage);
 		pathName = '';
 		for (i = 0; i < path.length; i++){
 			pathName = pathName + '/' + path[i].name;
 		}
 		console.log(pathName);
-
 	}
-
 
 	class Button{
 		constructor(page, x, y, width, height, color) {
@@ -156,7 +167,6 @@
   		}	
 	};
 
-
 	class Page{
 		constructor(name, Buttons, Addresses, index){
 			this.name = name;
@@ -164,12 +174,8 @@
 			this.Addresses = Addresses;
 			this.index = index;
 
-
 		}
-
 	};
-
-	  
 
 	var spread = 10;
 	let myAudio = document.querySelector('#audio')
@@ -179,35 +185,45 @@
 	let path = [];
 	let pathName = '';
 	let userID;
-	
+	let inXhitbox;
+	let inYhitbox;
+	let NDates = 5;
+	let entryDates = [];
+	let entryDay;
+	let entryMonth= 0;
+	let entryYear;
+	let fileDateX = 100;
+	let fileDateY;
+	let people = ['Gandalf White', 'Bilbo Baggins', 'Frodo Baggins', 'Gimli Undermountain', 'Thorin Oakenshield', 'Elrond Perendhel', 
+					'Samwise Gamgee', 'Tom Bombadill', 'Shadow Fax', 'Aragorn Strider', 'Smeagol Trahald', 'Legolas Greenleaf', 
+					'Pippin Took','Grima Wormtongue', 'Beorn Black', 'Saruman White', 'Merry Brandybuck', 'Lobelia Sackville-Baggins',
+					 'Boromir Gondorson', 'Bard Bowman', 'Brandy Wine', 'Balin Short', 'John Tolkien', 'Smaug Desolation'];
+	let companies = ['Fellowship', 'Misty Mountain', 'Second Breakfast', 'Lothlorien', 'Five Armies', '1-Ring', 'Rivendell'];
+	let medications = ['Wraith', 'Sting', 'Moria', 'Red Dawn', "Helm's Deep", 'Rohirrim', 'Urukhai', 'Eagle'];
 
 	// hardcode pages here until pages are procedurally generated
 	//button set syntax: [[NButtons, x, y, width, height, orientation], [ditto], ...]
 	let home = new Page('Home', [[5, screenWidth/3, screenHeight/6, 400, 600, false]], [6, 7, 4, 5, 8], 1);
 
 	let summaryPage = new Page ('Summary', [[1, 0, 0, 800, 200, true]], [0], 2);
-	let diagnosisPage = new Page ('Diagnosis', [[1, 0, 0, 800, 200, true]], [0], 3);
+	let filesPage = new Page ('Files', [[1, screenWidth*4/5, screenHeight*4/5, 100, 100, true]], [0], 3);
 	let providersPage = new Page ('Providers', [[1, 0, 0, 800, 200, true]], [0], 4);
 	let medicationsPage = new Page ('Medications', [[1, 0, 0, 800, 200, true]], [0], 5);
-	let patientsPage = new Page('Patients', [[5, screenWidth/3, screenHeight/4, screenWidth/3, screenHeight*2/3, false], 
+	let patientsPage = new Page('Patients', [[4, screenWidth/3, screenHeight/4, screenWidth/3, screenHeight*2/3, false], 
 											[2, screenWidth*4/5, screenHeight/8, 200, 100, true], 
 											[1, screenWidth*4/5, screenHeight*4/5, 100, 100, true]],
-											[2, 3, 4, 6, 7, 8, 0, 9], 6);
-	let doctorsPage = new Page ('Doctors', [[4, screenWidth/3, screenHeight/4, screenWidth/3, screenHeight*2/3, false], 
+											[3, 4, 5, 7, 8, 0, 9], 6);
+	let staffPage = new Page ('Staff', [[4, screenWidth/3, screenHeight/4, screenWidth/3, screenHeight*2/3, false], 
 											[2, screenWidth*4/5, screenHeight/8, 200, 100, true], 
 											[1, screenWidth*4/5, screenHeight*4/5, 100, 100, true]],
-											[6, 3, 4, 5, 7, 8, 0, 0], 7);
+											[6, 3, 4, 5, 8, 10, 9, 0], 7);
 	let profilePage = new Page ('User Profile', [[2, 0, 0, 800, 200, true]], [0, 10], 8);
 	let sharePage = new Page ('Share', [[1, 0, 0, 800, 200, true]], [0], 9);
 	let backPage = new Page ('Back', [[1, 0, 0, 800, 200, true]], [0], 0);
 	let logoutPage = new Page ('Logout', [[1, 0, 0, 800, 200, true]], [0], 10);
 
-
-	let pages = [backPage, home, summaryPage, diagnosisPage, providersPage, medicationsPage, patientsPage, doctorsPage, profilePage,
+	let pages = [backPage, home, summaryPage, filesPage, providersPage, medicationsPage, patientsPage, staffPage, profilePage,
 				 sharePage, logoutPage];
-
-	
-
 
 	let currentPage = home;
 	path.push(home);
@@ -219,12 +235,9 @@
 	var myLightGreen = [180, 254, 166];
 	var myRed = [171, 88, 98];
 
-
-
 	draw = function(){
 
 		background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
-
 		if(currentPage == profilePage){
 			if(userID == null){
 				userID = prompt('Please enter your username:');
@@ -238,36 +251,59 @@
 				textSize(12);
 			};	
 		};
+		if(currentPage == patientsPage){
+			fill(myDarkBlue[0], myDarkBlue[1], myDarkBlue[2]);
+			rect(100, 200, 400, 300);
+			fill(255);
+			textSize(30);
+
+			text('Name: '+ people[6], 130, 250);
+			text('Age: 82', 130, 300);
+			text('Patient ID #: 87231468', 130, 350);
+			text('Patient since: 06/16/2010', 130, 400);
+			text('Physician: ' + people[9], 130, 450);
+
+			textSize(60);
+			rect(110, 40, 350, 80);
+			fill(0);
+			text('MEDITECH', 130, 100);
+
+			textSize(12);
+			
+		};
+
+		if(currentPage == filesPage){
+			
+
+			for(i=0; i < logEntries.length; i++){
+				fileDateY = ((i*screenHeight/10)) % (screenHeight/2) + 200;
+				fileDateX = 100 + floor(i/5)*screenWidth/15;
+				fill(myDarkBlue[0], myDarkBlue[1], myDarkBlue[2]);
+				
+				rect(fileDateX - 10, fileDateY - 30, -30+screenWidth/15, 70);
+				fill(255);
+				text(logEntries[i], fileDateX, fileDateY);
+			}
+		}
 
 		pageDisplay(currentPage);
-		fill()
 
 		fill(255, 255, 255);
-		
 		if(wait<=hangTime){	
 			fill(myLightGreen[0], myLightGreen[1], myLightGreen[2]);
-			
 			wait++;
-		}
+		};
 		ellipse(mouseX, mouseY, 50, 50);
-		
-
-
 	}
-	  
-	  
-	    
-
 	  
 	  
 	  
     }};
 
 
-  // Get the canvas that ProcessingJS will use
-  var canvas = document.getElementById("mycanvas"); 
-  // Pass the function to ProcessingJS constructor
-  var processingInstance = new Processing(canvas, programCode); 
-
+  	// Get the canvas that ProcessingJS will use
+ 	 var canvas = document.getElementById("mycanvas"); 
+  	// Pass the function to ProcessingJS constructor
+	var processingInstance = new Processing(canvas, programCode); 
   </script>
 </html>
