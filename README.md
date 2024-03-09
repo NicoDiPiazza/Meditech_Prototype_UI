@@ -3,6 +3,14 @@ team 5 project for ENGR 102+, an innovation on the existing UI for the product/c
 Primary Programmer: Domenico Di Piazza <br>
 Other Team 5 members: Benjamin Sparrow, Jocilyn Lambert, Kunwarpratap Kang <br>
 
+Update 8:<br>
+Cleaning and Files<br>
+added: cleaned up mousePressed function, made basic layout for patient example page, automated dummy file dates, made files page, cleaned up page routes<br>
+removed: not a whole lot<br>
+Prototype 0.8<br>
+3/9/2024<br>
+<br>
+
 Update 7:<br>
 Page Connections and Paths<br>
 added: username/login page, back button, path, doctor page, cleaned up home page,<br>
