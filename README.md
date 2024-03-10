@@ -3,6 +3,14 @@ team 5 project for ENGR 102+, an innovation on the existing UI for the product/c
 Primary Programmer: Domenico Di Piazza <br>
 Other Team 5 members: Benjamin Sparrow, Jocilyn Lambert, Kunwarpratap Kang <br>
 
+Update 9:<br>
+What's up, Doc? It's me, Patient.<br>
+added: added lists of staff and patients, intermediary pages, made structures for autofilling in dates and ages and primary Phys. These are randomized and not saved yet, so a refactor/bug fix will be in order. however, this works for a low-scrutiny prototype showcase. next is the calendar.<br>
+removed: not a whole lot<br>
+Prototype 0.9<br>
+3/10/2024<br>
+<br>
+
 Update 8:<br>
 Cleaning and Files<br>
 added: cleaned up mousePressed function, made basic layout for patient example page, automated dummy file dates, made files page, cleaned up page routes<br>
