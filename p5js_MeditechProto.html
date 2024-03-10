@@ -7,6 +7,7 @@
 	<!--This draws the canvas on the webpage -->
     <canvas id="mycanvas"></canvas> 
 	<audio id="audio" src="ring-G.mp3"></audio>
+	<img id="record" src="BeeMovie.pdf"></img>
   </body>
  
   <!-- Include the processing.js library -->
@@ -14,15 +15,16 @@
   <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
   <script>
 
-
+	// Get the canvas that ProcessingJS will use
+	var canvas = document.getElementById("mycanvas"); 
 
 
   var programCode = function(processingInstance) {
     with (processingInstance) {
 
 	
-	var screenWidth = 1400;
-	var screenHeight = 600;
+	let screenWidth = 1500;
+	let screenHeight = 700;
 	noCursor();
 	
       size(screenWidth, screenHeight); 
@@ -77,12 +79,12 @@
 		};
 	}
 
-	var fileDates = function(){
+	var fileDates = function(entryYear){
 		entryDates = [];
 		entryMonth = 0;
 		entryYear = 2010 + floor(random(0, 14));
 		while (entryYear < 2024){
-			entryDay = floor(random(0, 28));
+			entryDay = floor(random(1, 28));
 			entryMonth = entryMonth + floor(random(1, 7));
 			if (entryMonth > 12){
 				entryMonth = entryMonth - 12;
@@ -106,16 +108,24 @@
 			NChecks = NChecks + currentPage.Buttons[i][0];
 		};
 
+		//this has to go in the mousePressed function, before the new current page is recognized
+		if(currentPage == filesPage){
+			currentPage = recordPage;
+			scroll = 0;
+		};
+
 		for (i = 0; i < hitboxes.length; i++){
 			inXhitbox = hitboxes[i].x <= mouseX && mouseX <= hitboxes[i].x + hitboxes[i].width;
 			inYhitbox = hitboxes[i].y <= mouseY && mouseY <= hitboxes[i].y + hitboxes[i].height;	
 			if(inXhitbox && inYhitbox){
 				currentPage = pages[hitboxes[i].page];
 				// put all the feedback stuff here
-				myAudio.play()
+				myAudio.play();
 				wait = 0;
+
 			}
 		}
+
 		if(currentPage == backPage){
 			// back button logic
 			if(path.length >= 1){
@@ -134,7 +144,7 @@
 			currentPage = home;
 			path.push(home);
 		}
-		else{
+		else if(currentPage != path[path.length -1]){
 			// path logic
 			path.push(currentPage);
 		};
@@ -143,6 +153,7 @@
 			logEntries = fileDates();
 			
 		}
+
 			
 			
 		
@@ -150,11 +161,23 @@
 		background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
 		pageDisplay(currentPage);
 		pathName = '';
+		idNumber = str(floor(random(100000, 900000)));
+		age = str(floor(random(25, 80)));
+		sinceDate = fileDates();
+		sinceDate = sinceDate[floor(random(0, sinceDate.length))];
+		primaryPhys = people[floor(random(0, peopleMidpoint))]
 		for (i = 0; i < path.length; i++){
 			pathName = pathName + '/' + path[i].name;
+			console.log(pathName);
 		}
-		console.log(pathName);
+
+		if(currentPage == recordPage && (mouseX>=screenWidth - scrollBarWidth || scroll === true)){
+			scroll = ! scroll;
+		};
+		
+		
 	}
+
 
 	class Button{
 		constructor(page, x, y, width, height, color) {
@@ -168,17 +191,19 @@
 	};
 
 	class Page{
-		constructor(name, Buttons, Addresses, index){
+		constructor(name, Buttons, Addresses, index, type){
 			this.name = name;
 			this.Buttons = Buttons;
 			this.Addresses = Addresses;
 			this.index = index;
+			this.type = type;
 
 		}
 	};
 
 	var spread = 10;
-	let myAudio = document.querySelector('#audio')
+	let myAudio = document.querySelector('#audio');
+	let myRecord = loadImage('Health-Care-Log-Template.jpg');
 	let wait =0;
 	let hangTime = 10;
 	let cursorRadius = 50
@@ -187,6 +212,7 @@
 	let userID;
 	let inXhitbox;
 	let inYhitbox;
+	let backButton = [1, screenWidth*4/5, screenHeight*4/5, 100, 100, true];
 	let NDates = 5;
 	let entryDates = [];
 	let entryDay;
@@ -194,6 +220,15 @@
 	let entryYear;
 	let fileDateX = 100;
 	let fileDateY;
+	let scrollBarWidth = 30;
+	let scrollBarHeight = 150;
+	let scroll = false;
+	let patientAestheticX = 100
+	let idNumber = str(floor(random(25, 80)));
+	let age = str(floor(random(25, 80)));
+	let sinceDate;
+
+
 	let people = ['Gandalf White', 'Bilbo Baggins', 'Frodo Baggins', 'Gimli Undermountain', 'Thorin Oakenshield', 'Elrond Perendhel', 
 					'Samwise Gamgee', 'Tom Bombadill', 'Shadow Fax', 'Aragorn Strider', 'Smeagol Trahald', 'Legolas Greenleaf', 
 					'Pippin Took','Grima Wormtongue', 'Beorn Black', 'Saruman White', 'Merry Brandybuck', 'Lobelia Sackville-Baggins',
@@ -201,29 +236,66 @@
 	let companies = ['Fellowship', 'Misty Mountain', 'Second Breakfast', 'Lothlorien', 'Five Armies', '1-Ring', 'Rivendell'];
 	let medications = ['Wraith', 'Sting', 'Moria', 'Red Dawn', "Helm's Deep", 'Rohirrim', 'Urukhai', 'Eagle'];
 
+	let peopleMidpoint = floor(people.length/2);
+	let staffPages = [];
+	let staffIndeces = [];
+
+	for (i=0; i<=peopleMidpoint; i++){
+
+		staffPages.push(new Page(people[i], [[4, screenWidth/3, 100 + scrollY, screenWidth/3, screenHeight*2/3, false], 
+											backButton], [11, 12, 6, 9, 0], 13+i, 'staff'));
+		staffIndeces.push(13+i);
+	}
+	staffIndeces.push(0);
+
+	let patientPages = [];
+	let patientIndeces = [];
+
+	for (i=1; i<peopleMidpoint; i++){
+
+		patientPages.push(new Page(people[i+peopleMidpoint], [[6, screenWidth/3, 100 + scrollY, screenWidth/3, screenHeight*2/3, false], 
+											backButton], [2, 4, 5, 9, 11, 12, 0], 13+i + peopleMidpoint, 'patient'));
+		patientIndeces.push(13+i + peopleMidpoint);
+	}
+	patientIndeces.push(0);
+	
+
+
 	// hardcode pages here until pages are procedurally generated
 	//button set syntax: [[NButtons, x, y, width, height, orientation], [ditto], ...]
 	let home = new Page('Home', [[5, screenWidth/3, screenHeight/6, 400, 600, false]], [6, 7, 4, 5, 8], 1);
 
-	let summaryPage = new Page ('Summary', [[1, 0, 0, 800, 200, true]], [0], 2);
-	let filesPage = new Page ('Files', [[1, screenWidth*4/5, screenHeight*4/5, 100, 100, true]], [0], 3);
-	let providersPage = new Page ('Providers', [[1, 0, 0, 800, 200, true]], [0], 4);
-	let medicationsPage = new Page ('Medications', [[1, 0, 0, 800, 200, true]], [0], 5);
-	let patientsPage = new Page('Patients', [[4, screenWidth/3, screenHeight/4, screenWidth/3, screenHeight*2/3, false], 
-											[2, screenWidth*4/5, screenHeight/8, 200, 100, true], 
-											[1, screenWidth*4/5, screenHeight*4/5, 100, 100, true]],
-											[3, 4, 5, 7, 8, 0, 9], 6);
-	let staffPage = new Page ('Staff', [[4, screenWidth/3, screenHeight/4, screenWidth/3, screenHeight*2/3, false], 
-											[2, screenWidth*4/5, screenHeight/8, 200, 100, true], 
-											[1, screenWidth*4/5, screenHeight*4/5, 100, 100, true]],
-											[6, 3, 4, 5, 8, 10, 9, 0], 7);
-	let profilePage = new Page ('User Profile', [[2, 0, 0, 800, 200, true]], [0, 10], 8);
-	let sharePage = new Page ('Share', [[1, 0, 0, 800, 200, true]], [0], 9);
-	let backPage = new Page ('Back', [[1, 0, 0, 800, 200, true]], [0], 0);
-	let logoutPage = new Page ('Logout', [[1, 0, 0, 800, 200, true]], [0], 10);
+	let summaryPage = new Page ('Summary', [backButton], [0], 2);
+	let filesPage = new Page ('Files', [backButton], [0], 3);
+	let providersPage = new Page ('Providers', [backButton], [0], 4);
+	let medicationsPage = new Page ('Medications', [backButton], [0], 5);
+	let patientsPage = new Page('Patients', [[peopleMidpoint - 1, screenWidth/4, 100 + scrollY, screenWidth/3, screenHeight*2/3, false], 
+											backButton],
+											patientIndeces, 6);
+	let staffPage = new Page ('Staff', [[peopleMidpoint + 1, screenWidth/4, 100 + scrollY, screenWidth/3, screenHeight*2/3, false], 
+											backButton],
+											staffIndeces, 7);
+	let profilePage = new Page ('User Profile', [[1, 1000, 50, 200, 50, true], backButton], [10, 0], 8);
+	let sharePage = new Page ('Share', [backButton], [0], 9);
+	let backPage = new Page ('Back', [backButton], [0], 0);
+	let logoutPage = new Page ('Logout', [backButton], [0], 10);
+	let recordPage = new Page ('Record', [backButton], [0], 11);
+	let calendarPage = new Page ('Calendar', [backButton], [0], 12);
 
 	let pages = [backPage, home, summaryPage, filesPage, providersPage, medicationsPage, patientsPage, staffPage, profilePage,
-				 sharePage, logoutPage];
+				 sharePage, logoutPage, recordPage, calendarPage];
+	
+	for (i=0; i<=peopleMidpoint; i++){
+
+		pages.push(staffPages[i]);
+	}
+
+	for (i=0; i<peopleMidpoint; i++){
+		pages.push(patientPages[i]);
+	}
+
+
+
 
 	let currentPage = home;
 	path.push(home);
@@ -236,6 +308,9 @@
 	var myRed = [171, 88, 98];
 
 	draw = function(){
+
+		
+
 
 		background(myLightBlue[0], myLightBlue[1], myLightBlue[2]);
 		if(currentPage == profilePage){
@@ -251,26 +326,46 @@
 				textSize(12);
 			};	
 		};
-		if(currentPage == patientsPage){
+		if(currentPage.type == 'patient'){
 			fill(myDarkBlue[0], myDarkBlue[1], myDarkBlue[2]);
-			rect(100, 200, 400, 300);
+			rect(patientAestheticX - 20, 200, 400, 300);
 			fill(255);
 			textSize(30);
 
-			text('Name: '+ people[6], 130, 250);
-			text('Age: 82', 130, 300);
-			text('Patient ID #: 87231468', 130, 350);
-			text('Patient since: 06/16/2010', 130, 400);
-			text('Physician: ' + people[9], 130, 450);
+			text('Name: '+ currentPage.name, patientAestheticX, 250);
+			text('Age: ' + age, patientAestheticX, 300);
+			text('Patient ID #: ' + idNumber, patientAestheticX, 350);
+			text('Patient since: ' + sinceDate, patientAestheticX, 400);
+			text('Physician: ' + primaryPhys, patientAestheticX, 450);
 
 			textSize(60);
-			rect(110, 40, 350, 80);
+			rect(patientAestheticX -20, 40, 350, 80);
 			fill(0);
-			text('MEDITECH', 130, 100);
+			text('MEDITECH', patientAestheticX, 110);
 
 			textSize(12);
 			
 		};
+
+		if(currentPage.type === 'staff'){
+			fill(myDarkBlue[0], myDarkBlue[1], myDarkBlue[2]);
+			rect(patientAestheticX - 20, 200, 400, 300);
+			fill(255);
+			textSize(30);
+
+			text('Name: '+ currentPage.name, patientAestheticX, 250);
+			text('Age: ' + age, patientAestheticX, 300);
+			text('Employee ID #: ' + idNumber, patientAestheticX, 350);
+			text('Employee since: ' + sinceDate, patientAestheticX, 400);
+
+			textSize(60);
+			rect(patientAestheticX -20, 40, 350, 80);
+			fill(0);
+			text('MEDITECH', patientAestheticX, 110);
+
+			textSize(12);
+			
+		}
 
 		if(currentPage == filesPage){
 			
@@ -286,6 +381,17 @@
 			}
 		}
 
+		if(currentPage == recordPage){
+
+			image(myRecord, myRecord.width/2, -scrollY, myRecord.width*2, myRecord.height*2);
+
+			fill(myLightGreen[0], myLightGreen[1], myLightGreen[2]);
+			if(scroll){
+				scrollY = mouseY - scrollBarHeight/2;
+			};
+			rect(screenWidth - scrollBarWidth, scrollY, scrollBarWidth, scrollBarHeight);
+		}
+
 		pageDisplay(currentPage);
 
 		fill(255, 255, 255);
@@ -294,15 +400,17 @@
 			wait++;
 		};
 		ellipse(mouseX, mouseY, 50, 50);
+
+		
 	}
+	
 	  
 	  
 	  
     }};
 
 
-  	// Get the canvas that ProcessingJS will use
- 	 var canvas = document.getElementById("mycanvas"); 
+  	
   	// Pass the function to ProcessingJS constructor
 	var processingInstance = new Processing(canvas, programCode); 
   </script>
