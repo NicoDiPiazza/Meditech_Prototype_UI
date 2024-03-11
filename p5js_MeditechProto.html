@@ -165,7 +165,8 @@
 		age = str(floor(random(25, 80)));
 		sinceDate = fileDates();
 		sinceDate = sinceDate[floor(random(0, sinceDate.length))];
-		primaryPhys = people[floor(random(0, peopleMidpoint))]
+		primaryPhys = people[floor(random(0, peopleMidpoint))];
+		sendConfirm = 0;
 		for (i = 0; i < path.length; i++){
 			pathName = pathName + '/' + path[i].name;
 			console.log(pathName);
@@ -213,6 +214,7 @@
 	let inXhitbox;
 	let inYhitbox;
 	let backButton = [1, screenWidth*4/5, screenHeight*4/5, 100, 100, true];
+	let shareButton = [1, screenWidth*4/5, screenHeight*3/5, 100, 100, true];
 	let NDates = 5;
 	let entryDates = [];
 	let entryDay;
@@ -227,6 +229,9 @@
 	let idNumber = str(floor(random(25, 80)));
 	let age = str(floor(random(25, 80)));
 	let sinceDate;
+	let autosave = 0;
+	let sendConfirm = 0;
+	let sendTarget = null;
 
 
 	let people = ['Gandalf White', 'Bilbo Baggins', 'Frodo Baggins', 'Gimli Undermountain', 'Thorin Oakenshield', 'Elrond Perendhel', 
@@ -239,12 +244,13 @@
 	let peopleMidpoint = floor(people.length/2);
 	let staffPages = [];
 	let staffIndeces = [];
+	let additionOffset = 16;
 
 	for (i=0; i<=peopleMidpoint; i++){
 
-		staffPages.push(new Page(people[i], [[4, screenWidth/3, 100 + scrollY, screenWidth/3, screenHeight*2/3, false], 
-											backButton], [11, 12, 6, 9, 0], 13+i, 'staff'));
-		staffIndeces.push(13+i);
+		staffPages.push(new Page(people[i], [[5, screenWidth/3, 100 + scrollY, screenWidth/3, screenHeight*2/3, false], 
+											backButton], [3, 12, 6, 9, 15, 0], additionOffset+i, 'staff'));
+		staffIndeces.push(additionOffset+i);
 	}
 	staffIndeces.push(0);
 
@@ -254,8 +260,8 @@
 	for (i=1; i<peopleMidpoint; i++){
 
 		patientPages.push(new Page(people[i+peopleMidpoint], [[6, screenWidth/3, 100 + scrollY, screenWidth/3, screenHeight*2/3, false], 
-											backButton], [2, 4, 5, 9, 11, 12, 0], 13+i + peopleMidpoint, 'patient'));
-		patientIndeces.push(13+i + peopleMidpoint);
+											backButton], [4, 5, 9, 3, 12, 15, 0], additionOffset+i + peopleMidpoint, 'patient'));
+		patientIndeces.push(additionOffset+i + peopleMidpoint);
 	}
 	patientIndeces.push(0);
 	
@@ -276,14 +282,18 @@
 											backButton],
 											staffIndeces, 7);
 	let profilePage = new Page ('User Profile', [[1, 1000, 50, 200, 50, true], backButton], [10, 0], 8);
-	let sharePage = new Page ('Share', [backButton], [0], 9);
+	let sharePage = new Page ('Export', [[2, screenWidth/4, 300, screenWidth/3, screenHeight*1/3, false], 
+										backButton], [13, 14, 0], 9);
 	let backPage = new Page ('Back', [backButton], [0], 0);
 	let logoutPage = new Page ('Logout', [backButton], [0], 10);
-	let recordPage = new Page ('Record', [backButton], [0], 11);
+	let recordPage = new Page ('Record', [backButton, shareButton], [0, 9], 11);
 	let calendarPage = new Page ('Calendar', [backButton], [0], 12);
+	let emailPage = new Page ('Email', [backButton], [0], 13);
+	let faxPage = new Page ('Fax', [backButton], [0], 14);
+	let chatPage = new Page ('Chat', [backButton], [0], 15);
 
 	let pages = [backPage, home, summaryPage, filesPage, providersPage, medicationsPage, patientsPage, staffPage, profilePage,
-				 sharePage, logoutPage, recordPage, calendarPage];
+				 sharePage, logoutPage, recordPage, calendarPage, emailPage, faxPage, chatPage];
 	
 	for (i=0; i<=peopleMidpoint; i++){
 
@@ -325,6 +335,44 @@
 
 				textSize(12);
 			};	
+		};
+
+		if(currentPage == emailPage){
+			if(sendTarget == null && sendConfirm < 75){
+				sendTarget = prompt('Email to: ');
+			}
+			sendConfirm++;
+			if (sendConfirm <= 75){
+			
+				textSize(30);
+				fill(255);
+
+				text('Email sent to ' + sendTarget + '.', screenWidth/4, screenHeight/2);
+
+				textSize(12);
+			};	
+			if (sendConfirm > 75){
+				sendTarget = null;
+			}
+		};
+		if(currentPage == faxPage){
+			if(sendTarget == null && sendConfirm < 75){
+				sendTarget = prompt('Fax to: ');
+			}
+			sendConfirm++;
+			if (sendConfirm <= 75){
+			
+				textSize(30);
+				fill(255);
+
+				text('Fax sent to ' + sendTarget + '.', screenWidth/4, screenHeight/2);
+
+				textSize(12);
+			};
+
+			if (sendConfirm > 75){
+				sendTarget = null;
+			}
 		};
 		if(currentPage.type == 'patient'){
 			fill(myDarkBlue[0], myDarkBlue[1], myDarkBlue[2]);
@@ -400,6 +448,18 @@
 			wait++;
 		};
 		ellipse(mouseX, mouseY, 50, 50);
+
+		autosave++;
+
+		if (autosave < 31){
+			fill(255);
+			rect(10, 10, 100, 30);
+			fill(myRed[0], myRed[1], myRed[1]);
+			text('AUTOSAVING...', 15, 25);
+		}
+		if(autosave >= 900){
+			autosave = 0;
+		}
 
 		
 	}
